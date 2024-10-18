@@ -19,7 +19,7 @@ async function onGetData(id){
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: urlBase + 'financeiro/CentroCusto/GetData?doID=4779&id=' + id,
+        url: urlBase + 'financeiro/PlanoConta/GetData?doID=4779&id=' + id,
         headers: { 
           'DoToken': token, 
           'Authorization': basicToken
@@ -31,7 +31,7 @@ async function onGetData(id){
       .then((response) => {
         if(response.data.RetWm === "success"){
 
-          response.data.obj.Nodes.filter(e => e.ID > 1).forEach(element => {
+          response.data.obj.Nodes.filter(e => e.ID > 6).forEach(element => {
             var data = JSON.stringify(element);
 
             data = data
@@ -55,7 +55,7 @@ async function onSaveData(data){
     let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: urlBase + 'financeiro/CentroCusto/SaveData?doID=4864&doIDUser=-100',
+        url: urlBase + 'financeiro/PlanoConta/SaveData?doID=4864&doIDUser=-100',
         headers: { 
           'DoToken': token, 
           'Authorization': basicToken,
