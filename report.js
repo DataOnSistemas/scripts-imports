@@ -20,6 +20,16 @@ const templateHtml = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vue.js em um único arquivo HTML</title>
   <script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.min.js"></script>
+  <style>
+
+    body {
+    background-color: #000000;
+    margin: 0;
+    color: #ffffff;
+    height: 100vh;
+    
+  }
+  </style>
 </head>
 <body>
   <div id="app">
@@ -59,20 +69,37 @@ const templateHtml = `
 
 async function generatePDF() {
   // Inicia o navegador Puppeteer
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-zygote'
+    ],
+    timeout: 60000
+  });
   const page = await browser.newPage();
 
 
-  await page.setContent(templateHtml);
+  await page.setContent(templateHtml, { waitUntil: 'networkidle2' });
 
-  // Gera o PDF e salva no disco
-  await page.pdf({ path: 'outpfuts.pdf', format: 'A4' });
+
+  await page.pdf({ 
+    path: 'outpfuts.pdf', 
+    format: 'A4',
+    background: true,
+    displayHeaderFooter: false, 
+    printBackground: true
+  });
+
+  await page.screenshot({ path: 'test.png', fullPage: true });
 
   console.log('PDF gerado com sucesso!');
 
-  // Fecha o navegador
+
   await browser.close();
 }
 
-// Chama a função para gerar o PDF
 generatePDF();
